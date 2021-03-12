@@ -1,3 +1,6 @@
+groupadd mysql
+useradd -r -g mysql mysql
+
 # 脚本出错时终止执行
 set -e
 
@@ -127,7 +130,7 @@ echo '初始化MySQL Data'
 "${2}"/bin/mysqld --defaults-file="${2}"/my.cnf --initialize --lower-case-table-names=1
 
 echo 'MySQL Password'
-grep 'temporary password' "${2}"/log/mysqld.log
+grep 'temporary password' "${2}"/log/mysql.log
 
 
 
@@ -146,4 +149,7 @@ cat <<EOF > "${2}"/restart.sh
 ${2}/stop.sh && ${2}/start.sh
 EOF
 
+echo '赋予权限...'
 chmod +x "${2}"/start.sh && chmod +x "${2}"/stop.sh && chmod +x "${2}"/restart.sh
+echo '启动数据库...'
+"${2}"/start.sh
